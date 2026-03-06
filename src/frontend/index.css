@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Fraunces display font ── */
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Outfit body font ── */
+@font-face {
+  font-family: "Outfit";
+  src: url("/assets/fonts/Outfit.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* Deep-ocean atlas theme (dark) */
+    --background:      0.13  0.018  240;
+    --foreground:      0.94  0.01   240;
+    --card:            0.17  0.022  240;
+    --card-foreground: 0.94  0.01   240;
+    --popover:         0.17  0.022  240;
+    --popover-foreground: 0.94 0.01 240;
+
+    /* Teal primary */
+    --primary:          0.72  0.16  185;
+    --primary-foreground: 0.1 0.02  185;
+
+    /* Muted */
+    --secondary:        0.22  0.025  240;
+    --secondary-foreground: 0.94 0.01 240;
+    --muted:            0.22  0.025  240;
+    --muted-foreground: 0.58  0.04   240;
+
+    /* Gold accent */
+    --accent:           0.82  0.17   88;
+    --accent-foreground: 0.13 0.02  240;
+
+    /* Destructive */
+    --destructive:      0.57  0.245  27;
+    --destructive-foreground: 0.98 0 0;
+
+    --border:  0.28  0.03  240;
+    --input:   0.28  0.03  240;
+    --ring:    0.72  0.16  185;
+
+    --chart-1: 0.72  0.16  185;
+    --chart-2: 0.82  0.17   88;
+    --chart-3: 0.65  0.18  30;
+    --chart-4: 0.55  0.20  270;
+    --chart-5: 0.70  0.14  145;
+
+    --sidebar: 0.15 0.020 240;
+    --sidebar-foreground: 0.94 0.01 240;
+    --sidebar-primary: 0.72 0.16 185;
+    --sidebar-primary-foreground: 0.1 0.02 185;
+    --sidebar-accent: 0.22 0.025 240;
+    --sidebar-accent-foreground: 0.94 0.01 240;
+    --sidebar-border: 0.28 0.03 240;
+    --sidebar-ring: 0.72 0.16 185;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Outfit", sans-serif;
+  }
+}
+
+/* ── Atlas grid background ── */
+.atlas-bg {
+  background-image:
+    radial-gradient(circle at 20% 20%, oklch(0.72 0.16 185 / 0.07) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, oklch(0.82 0.17 88 / 0.06) 0%, transparent 45%),
+    linear-gradient(
+      180deg,
+      oklch(0.13 0.018 240) 0%,
+      oklch(0.11 0.015 240) 100%
+    );
+}
+
+/* ── Subtle grid lines ── */
+.atlas-grid {
+  background-image:
+    linear-gradient(oklch(0.72 0.16 185 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.72 0.16 185 / 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Noise texture overlay ── */
+.noise-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(var(--border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(var(--primary));
+}
+
+/* ── Search glow ── */
+.search-glow:focus-within {
+  box-shadow: 0 0 0 2px oklch(var(--primary) / 0.3), 0 0 20px oklch(var(--primary) / 0.15);
+}
+
+/* ── Card hover glow ── */
+.country-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.country-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px oklch(var(--primary) / 0.12), 0 2px 8px oklch(0 0 0 / 0.4);
+  border-color: oklch(var(--primary) / 0.4);
+}

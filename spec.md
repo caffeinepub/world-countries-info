@@ -1,25 +1,20 @@
 # World Countries Info
 
 ## Current State
-New project. No existing code.
+Project exists but draft has expired. Previously showed 50 countries with capitals and currencies.
 
 ## Requested Changes (Diff)
 
 ### Add
-- A page listing 50 countries with their capital city and currency
-- Search/filter functionality to find countries by name, capital, or currency
-- A clean table or card-based layout displaying all 50 countries
+- Country flag display (emoji flags or SVG) for each country card
 
 ### Modify
-- N/A
+- Rebuild the app with flags included alongside capital and currency info
 
 ### Remove
-- N/A
+- Nothing
 
 ## Implementation Plan
-- Backend: Store 50 countries with name, capital, and currency as stable data
-- Frontend:
-  - Display all 50 countries in a searchable, filterable table/card view
-  - Each entry shows: country name, capital city, currency name
-  - Search input to filter results in real-time
-  - Responsive layout for mobile and desktop
+- Static dataset of 50 countries with: name, capital, currency, and flag emoji
+- Responsive card grid layout with search/filter
+- Each card shows flag, country name, capital, and currency

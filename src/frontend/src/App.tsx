@@ -7,8 +7,61 @@ import { useMemo, useState } from "react";
 import type { Country } from "./backend.d";
 import { useGetCountries } from "./hooks/useQueries";
 
-// ── Stagger animation variants ──────────────────────────────────────────────
+// ── Flag map ──────────────────────────────────────────────────────────────────
+const FLAG_MAP: Record<string, string> = {
+  "United States": "🇺🇸",
+  "United Kingdom": "🇬🇧",
+  France: "🇫🇷",
+  Germany: "🇩🇪",
+  Japan: "🇯🇵",
+  China: "🇨🇳",
+  India: "🇮🇳",
+  Brazil: "🇧🇷",
+  Canada: "🇨🇦",
+  Australia: "🇦🇺",
+  Russia: "🇷🇺",
+  Mexico: "🇲🇽",
+  "South Korea": "🇰🇷",
+  Italy: "🇮🇹",
+  Spain: "🇪🇸",
+  Indonesia: "🇮🇩",
+  Netherlands: "🇳🇱",
+  "Saudi Arabia": "🇸🇦",
+  Turkey: "🇹🇷",
+  Switzerland: "🇨🇭",
+  Argentina: "🇦🇷",
+  Sweden: "🇸🇪",
+  Norway: "🇳🇴",
+  Denmark: "🇩🇰",
+  Poland: "🇵🇱",
+  Belgium: "🇧🇪",
+  Thailand: "🇹🇭",
+  Egypt: "🇪🇬",
+  "South Africa": "🇿🇦",
+  Nigeria: "🇳🇬",
+  Pakistan: "🇵🇰",
+  Bangladesh: "🇧🇩",
+  Philippines: "🇵🇭",
+  Malaysia: "🇲🇾",
+  Singapore: "🇸🇬",
+  Vietnam: "🇻🇳",
+  Ukraine: "🇺🇦",
+  Romania: "🇷🇴",
+  "Czech Republic": "🇨🇿",
+  Portugal: "🇵🇹",
+  Greece: "🇬🇷",
+  Hungary: "🇭🇺",
+  Israel: "🇮🇱",
+  "United Arab Emirates": "🇦🇪",
+  Iran: "🇮🇷",
+  Colombia: "🇨🇴",
+  Chile: "🇨🇱",
+  Peru: "🇵🇪",
+  "New Zealand": "🇳🇿",
+  Kenya: "🇰🇪",
+};
 
+// ── Stagger animation variants ──────────────────────────────────────────────
 const containerVariants: Variants = {
   hidden: {},
   visible: {
@@ -39,23 +92,34 @@ const heroVariants: Variants = {
 
 // ── Country Card ─────────────────────────────────────────────────────────────
 function CountryCard({ country, index }: { country: Country; index: number }) {
+  const flag = FLAG_MAP[country.name] ?? "🌍";
   return (
     <motion.article
       variants={cardVariants}
       className="country-card group relative bg-card border border-border rounded-lg p-5 flex flex-col gap-3 cursor-default"
-      data-ocid={`countries.item.${index}`}
+      data-ocid={`country.card.${index}`}
     >
-      {/* Index badge */}
-      <div className="absolute top-3 right-3">
-        <span className="text-xs font-mono text-muted-foreground/60 tabular-nums">
+      {/* Flag + index row */}
+      <div className="flex items-start justify-between">
+        <span
+          className="text-4xl leading-none select-none"
+          role="img"
+          aria-label={`Flag of ${country.name}`}
+        >
+          {flag}
+        </span>
+        <span className="text-xs font-mono text-muted-foreground/60 tabular-nums mt-1">
           {String(index).padStart(2, "0")}
         </span>
       </div>
 
       {/* Country name */}
-      <h2 className="font-display font-semibold text-lg leading-tight pr-8 text-foreground group-hover:text-primary transition-colors duration-200">
+      <h2 className="font-display font-semibold text-base leading-tight text-foreground group-hover:text-primary transition-colors duration-200">
         {country.name}
       </h2>
+
+      {/* Divider */}
+      <div className="h-px bg-border/60" />
 
       {/* Capital */}
       <div className="flex items-center gap-2 text-sm">
@@ -93,7 +157,9 @@ function CountrySkeletons() {
           key={id}
           className="bg-card border border-border rounded-lg p-5 flex flex-col gap-3"
         >
-          <Skeleton className="h-6 w-3/4 bg-muted" />
+          <Skeleton className="h-10 w-12 bg-muted rounded" />
+          <Skeleton className="h-5 w-3/4 bg-muted" />
+          <Skeleton className="h-px w-full bg-muted" />
           <Skeleton className="h-4 w-full bg-muted" />
           <Skeleton className="h-4 w-2/3 bg-muted" />
         </div>
@@ -133,7 +199,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: allCountries, isLoading, isError } = useGetCountries();
 
-  // Client-side filtering for instant feedback
   const filtered = useMemo<Country[]>(() => {
     if (!allCountries) return [];
     if (!searchQuery.trim()) return allCountries;
@@ -188,7 +253,6 @@ export default function App() {
           animate="visible"
           className="container max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10"
         >
-          {/* Decorative label */}
           <div className="flex items-center gap-2 mb-5">
             <div className="h-px w-8 bg-primary/50" />
             <span className="text-xs font-mono tracking-widest uppercase text-primary/70">
@@ -200,8 +264,8 @@ export default function App() {
             World <span className="text-primary">Countries</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-lg mb-8">
-            Explore 50 countries with their capitals and currencies — your
-            essential global reference guide.
+            Explore 50 countries with their flags, capitals, and currencies —
+            your essential global reference guide.
           </p>
 
           {/* ── Search ── */}
@@ -234,40 +298,38 @@ export default function App() {
 
         {/* ── Results bar ── */}
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 pb-4">
-          <div className="flex items-center justify-between">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={`${resultCount}-${searchQuery}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-sm text-muted-foreground"
-              >
-                {isLoading ? (
-                  "Loading countries…"
-                ) : searchQuery ? (
-                  <>
-                    Showing{" "}
-                    <span className="text-foreground font-medium">
-                      {resultCount}
-                    </span>{" "}
-                    of{" "}
-                    <span className="text-foreground font-medium">
-                      {totalCount}
-                    </span>{" "}
-                    countries
-                  </>
-                ) : (
-                  <>
-                    Showing{" "}
-                    <span className="text-foreground font-medium">
-                      {totalCount}
-                    </span>{" "}
-                    countries
-                  </>
-                )}
-              </motion.p>
-            </AnimatePresence>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`${resultCount}-${searchQuery}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-sm text-muted-foreground"
+            >
+              {isLoading ? (
+                "Loading countries…"
+              ) : searchQuery ? (
+                <>
+                  Showing{" "}
+                  <span className="text-foreground font-medium">
+                    {resultCount}
+                  </span>{" "}
+                  of{" "}
+                  <span className="text-foreground font-medium">
+                    {totalCount}
+                  </span>{" "}
+                  countries
+                </>
+              ) : (
+                <>
+                  Showing{" "}
+                  <span className="text-foreground font-medium">
+                    {totalCount}
+                  </span>{" "}
+                  countries
+                </>
+              )}
+            </motion.p>
+          </AnimatePresence>
         </div>
 
         {/* ── Main content ── */}
